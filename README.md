@@ -1,1 +1,1 @@
-# dsi-2020.2
+# Desenvolvimento de Sistemas de Informação (2020.2)
