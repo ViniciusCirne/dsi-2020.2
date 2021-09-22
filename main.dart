@@ -25,6 +25,10 @@ class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _saved = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18);
+  late WordPair wordP;
+  late String firstW;
+  late String secondW;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold (
@@ -44,19 +48,24 @@ class _RandomWordsState extends State<RandomWords> {
         pair.asPascalCase,
         style: _biggerFont,
       ),
-      trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
+      trailing: IconButton(
+        icon: alreadySaved ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+        color: alreadySaved ? Colors.pinkAccent : null,
+        onPressed: () {
+          setState(() {
+            if (alreadySaved) {
+              //Icon(Icons.favorite_border, color: null,);
+              _saved.remove(pair);
+            } else {
+              //Icon(Icons.favorite, color: Colors.pinkAccent,);
+              _saved.add(pair);
+            }
+          });
+        },
       ),
       onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          } else {
-            _saved.add(pair);
-          }
-        });
-      },
+        _updateList(pair, _suggestions.indexOf(pair));
+      }
     );
   }
 
@@ -118,6 +127,60 @@ class _RandomWordsState extends State<RandomWords> {
         },
       ),
     );
+  }
+  void _updateList(WordPair pair, int index) {
+    String firstW = "";
+    String secondW = "";
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Edit Item'),
+            ),
+            body: Column(
+              children: [
+                TextField(
+                  onChanged: (text){
+                    firstW = text;
+                  },
+                  decoration: const InputDecoration(
+                      labelText: 'First Word',
+                      border: OutlineInputBorder()
+                    ),
+                ),
+                TextField(
+                  onChanged: (text){
+                    secondW = text;
+                  },
+                  decoration: const InputDecoration(
+                      labelText: 'Second Word',
+                      border: OutlineInputBorder()
+                  ),
+                ),
+                ElevatedButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
+                     _suggestions.remove(pair);
+                     saveW(_suggestions.indexOf(pair), firstW, secondW);
+                     Navigator.of(context).pop();
+                  }
+
+                )
+              ],
+            )
+          );
+        },
+      ),
+    );
+  }
+
+  void saveW (int index, String first, String second){
+    setState((){
+      wordP = WordPair(first, second);
+      _suggestions.insert(index, wordP);
+    });
   }
 }
 
