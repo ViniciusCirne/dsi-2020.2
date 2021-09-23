@@ -1,5 +1,6 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 void main() => runApp(MyApp());
 
@@ -44,28 +45,28 @@ class _RandomWordsState extends State<RandomWords> {
   Widget _buildRow(WordPair pair) {
     final alreadySaved = _saved.contains(pair);
     return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-      trailing: IconButton(
-        icon: alreadySaved ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-        color: alreadySaved ? Colors.pinkAccent : null,
-        onPressed: () {
-          setState(() {
-            if (alreadySaved) {
-              //Icon(Icons.favorite_border, color: null,);
-              _saved.remove(pair);
-            } else {
-              //Icon(Icons.favorite, color: Colors.pinkAccent,);
-              _saved.add(pair);
-            }
-          });
-        },
-      ),
-      onTap: () {
-        _updateList(pair, _suggestions.indexOf(pair));
-      }
+        title: Text(
+          pair.asPascalCase,
+          style: _biggerFont,
+        ),
+        trailing: IconButton(
+          icon: alreadySaved ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+          color: alreadySaved ? Colors.pinkAccent : null,
+          onPressed: () {
+            setState(() {
+              if (alreadySaved) {
+                //Icon(Icons.favorite_border, color: null,);
+                _saved.remove(pair);
+              } else {
+                //Icon(Icons.favorite, color: Colors.pinkAccent,);
+                _saved.add(pair);
+              }
+            });
+          },
+        ),
+        onTap: () {
+          _updateList(context, pair, _suggestions.indexOf(pair));
+        }
     );
   }
 
@@ -81,17 +82,17 @@ class _RandomWordsState extends State<RandomWords> {
             _suggestions.addAll(generateWordPairs().take(10));
           }
           return Dismissible(
-            child: _buildRow(_suggestions[index]),
-            key: ValueKey(_suggestions[index]),
-            background: Container(
-            color: Colors.red,
-            ),
-            onDismissed: (DismissDirection direction){
-              _removeSaved(_suggestions[index]);
-              setState(() {
-                _suggestions.removeAt(index);
-              });
-            }
+              child: _buildRow(_suggestions[index]),
+              key: ValueKey(_suggestions[index]),
+              background: Container(
+                color: Colors.red,
+              ),
+              onDismissed: (DismissDirection direction){
+                _removeSaved(_suggestions[index]);
+                setState(() {
+                  _suggestions.removeAt(index);
+                });
+              }
           );
         }
     );
@@ -128,7 +129,7 @@ class _RandomWordsState extends State<RandomWords> {
       ),
     );
   }
-  void _updateList(WordPair pair, int index) {
+  void _updateList(context, WordPair pair, int index) {
     String firstW = "";
     String secondW = "";
 
@@ -136,40 +137,39 @@ class _RandomWordsState extends State<RandomWords> {
       MaterialPageRoute<void>(
         builder: (BuildContext context) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text('Edit Item'),
-            ),
-            body: Column(
-              children: [
-                TextField(
-                  onChanged: (text){
-                    firstW = text;
-                  },
-                  decoration: const InputDecoration(
-                      labelText: 'First Word',
-                      border: OutlineInputBorder()
+              appBar: AppBar(
+                title: Text('Edit Item'),
+              ),
+              body: Column(
+                children: [
+                  TextField(
+                    onChanged: (text){
+                      firstW = text;
+                    },
+                    decoration: const InputDecoration(
+                        labelText: 'First Word',
+                        border: OutlineInputBorder()
                     ),
-                ),
-                TextField(
-                  onChanged: (text){
-                    secondW = text;
-                  },
-                  decoration: const InputDecoration(
-                      labelText: 'Second Word',
-                      border: OutlineInputBorder()
                   ),
-                ),
-                ElevatedButton(
-                    child: Text('Confirm'),
-                    onPressed: () {
-                     _suggestions.remove(pair);
-                     saveW(_suggestions.indexOf(pair), firstW, secondW);
-                     Navigator.of(context).pop();
-                  }
+                  TextField(
+                    onChanged: (text){
+                      secondW = text;
+                    },
+                    decoration: const InputDecoration(
+                        labelText: 'Second Word',
+                        border: OutlineInputBorder()
+                    ),
+                  ),
+                  ElevatedButton(
+                      child: Text('Confirm'),
+                      onPressed: () {
+                        saveW(_suggestions.indexOf(pair), firstW, secondW);
+                        Navigator.of(context).pop();
+                      }
 
-                )
-              ],
-            )
+                  )
+                ],
+              )
           );
         },
       ),
@@ -179,9 +179,8 @@ class _RandomWordsState extends State<RandomWords> {
   void saveW (int index, String first, String second){
     setState((){
       wordP = WordPair(first, second);
-      _suggestions.insert(index, wordP);
+      _suggestions[index] = wordP;
     });
   }
 }
-
 
