@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "519478960214",
+    "project_id": "nomesbandas",
+    "storage_bucket": "nomesbandas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519478960214:android:3b57e9d805c4f3cf941bf7",
+        "android_client_info": {
+          "package_name": "com.example.flutter_bandnames"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519478960214-i1kjremofv9eb3j9pa8uehvapphu4kdd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCWB3duqYl5TdyQJTGZydX4qu2YoX4HHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519478960214-i1kjremofv9eb3j9pa8uehvapphu4kdd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
